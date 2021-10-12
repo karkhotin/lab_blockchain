@@ -1,6 +1,9 @@
 import hashlib
 import json
 from time import time
+from flask import Flask, jsonify,request
+from textwrap import dedent
+from uuid import uuid4
 
 class Blockchain (object):
     def __init__(self):
@@ -45,7 +48,17 @@ class Blockchain (object):
         guess_hash = hashlib.sha256(guess).hexdigest()
         return guess_hash[:2]=='01'
 
+#blockchain=Blockchain()
+#block_KKY=blockchain.new_block_KKY(['09122001'],'acfb0932d7fbb22c2704067702a192ab914c6f30277c0e563fae53c3bc55ab6d')
+#blockchain.proof_of_work(['12'])
+#print(block_KKY)
+
+app=Flask(__name__)
+node_id = str(uuid4()).replace('-','')
 blockchain=Blockchain()
-block_KKY=blockchain.new_block_KKY(['09122001'],'acfb0932d7fbb22c2704067702a192ab914c6f30277c0e563fae53c3bc55ab6d')
-blockchain.proof_of_work(['12'])
-print(block_KKY)
+
+@app.route("/")
+def index():
+    return "Hello world"
+if __name__=="__main__":
+    app.run(host='0.0.0.0', port=5000)
