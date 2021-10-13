@@ -8,7 +8,7 @@ class Blockchain(object):
     def __init__(self):
         self.chain_KKY = []
         self.current_transactions_KKY = []
-        self.new_block_KKY(previous_hash='1', proof=9122001)
+        self.new_block_KKY(previous_hash=1, proof=9122001)
 
     def new_block_KKY(self, proof, previous_hash=None):
         block_KKY = {
@@ -16,7 +16,7 @@ class Blockchain(object):
             'timestamp': time(),
             'transactions': self.current_transactions_KKY,
             'proof': proof,
-            'previous_hash': previous_hash or self.hash_KKY(self.chain_KKY[1]),
+            'previous_hash': previous_hash or self.hash_KKY(self.chain_KKY[-1]),
         }
         self.current_transactions_KKY = []
         self.chain_KKY.append(block_KKY)
@@ -35,13 +35,15 @@ class Blockchain(object):
         proof_KKY = 0
         while self.valid_proof_KKY(last_proof, proof_KKY) is False:
             proof_KKY += 1
-            return proof_KKY
+        return proof_KKY
 
     @staticmethod
     def valid_proof_KKY(last_proof, proof):
         guess_KKY = f'{last_proof}{proof}'.encode()
         guess_hash_KKY = hashlib.sha256(guess_KKY).hexdigest()
-        return guess_hash_KKY[:-2] == "01"
+        if (guess_hash_KKY[-2:]=="12"):
+            print(guess_hash_KKY)
+        return guess_hash_KKY[-2:] == "12"
 
     def hash_KKY(self, block):
         block_string_KKY = json.dumps(block, sort_keys=True).encode()
@@ -54,7 +56,8 @@ class Blockchain(object):
 app = Flask(__name__)
 node_id = str(uuid4()).replace('-', '')
 blockchain = Blockchain()
-
+print(blockchain.proof_of_work_KKY(9122001))
+print(blockchain.proof_of_work_KKY(9122))
 @app.route('/mine', methods=['GET'])
 def mine():
     last_block = blockchain.last_block
