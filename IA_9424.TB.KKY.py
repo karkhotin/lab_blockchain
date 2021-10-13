@@ -4,8 +4,6 @@ from time import time
 from uuid import uuid4
 from flask import Flask, jsonify, request
 from textwrap import dedent
-
-
 class Blockchain(object):
     def __init__(self):
         self.chain_KKY = []
@@ -53,11 +51,9 @@ class Blockchain(object):
     def last_block(self):
         return self.chain_KKY[-1]
 
-
 app = Flask(__name__)
 node_id = str(uuid4()).replace('-', '')
 blockchain = Blockchain()
-
 
 @app.route('/mine', methods=['GET'])
 def mine():
@@ -83,14 +79,13 @@ def mine():
     }
     return jsonify(response), 200
 
-
 @app.route('/transactions/new', methods=['POST'])
 def new_transaction_KKY():
  values = request.get_json()
  required = ['sender', 'recipient', 'amount']
  if not all(k in values for k in required):
      return 'Missing values', 400
- index = blockchain.new_transaction(values['sender'], values['recipient'], values['amount'])
+ index = blockchain.new_transaction_KKY(values['sender'], values['recipient'], values['amount'])
  response = {'message': f'Transaction will be added to Block {index}'}
  return jsonify(response), 201
 
@@ -101,7 +96,6 @@ def full_chain():
         'length': len(blockchain.chain_KKY),
     }
     return jsonify(response), 200
-
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
