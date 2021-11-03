@@ -108,8 +108,6 @@ print(blockchain.proof_of_work_KKY(9122001))
 print(blockchain.proof_of_work_KKY(9122))
 users = []
 balances = []
-
-
 @app.route('/mine', methods=['GET'])
 def mine():
     last_block = blockchain.last_block
@@ -143,22 +141,20 @@ def mineby():
     required = ['miner']
     if not all(k in values for k in required):
         return 'Missing values', 400
-
     blockchain.new_transaction_KKY(
         sender="0",
         recipient=values['miner'],
-        amount=19,
+        amount=9,
     )
-
     presence = False
     for user in users:
         if user == values['miner']:
             presence = True
-            balances[users.index(user)] += 19
+            balances[users.index(user)] += 9
             break
     if not presence:
         users.append(values['miner'])
-        balances.append(19)
+        balances.append(9)
 
     previous_hash = blockchain.hash_KKY(last_block)
     block = blockchain.new_block_KKY(proof, previous_hash)
@@ -219,12 +215,8 @@ def display_balances():
         }
         balances_blck.append(balances_usrs)
         i+=1
-
-    response = {
-        "Current users' balances": balances_blck
-    }
+    response = {"Current users' balances": balances_blck}
     return jsonify(response), 200
-
 
 @app.route('/chain', methods=['GET'])
 def full_chain():
